@@ -30,9 +30,9 @@ int main(int argc, char **argv) {
         //     double dist = kv.second;
         //     std::cout << pair.first << " -> " << pair.second << " : " << std::fixed << std::setprecision(2) << dist << "\n";
         // }
-        std::string source = argv[1];
-        std::string destination = argv[2];
-        std::cout << "Source: " << source << ", Destination: " << destination << std::endl;
+        // std::string source = argv[1];
+        // std::string destination = argv[2];
+        // std::cout << "Source: " << source << ", Destination: " << destination << std::endl;
 
         auto flight_graph = adjacency_list(routes);
     } catch (const std::exception &ex) {
@@ -40,4 +40,5 @@ int main(int argc, char **argv) {
         return 2;
     }
     std::cout << "Processing completed successfully.\n";
+    return 0;
 }
