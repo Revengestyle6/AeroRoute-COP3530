@@ -212,12 +212,10 @@ int main(int argc, char **argv) {
         auto routes = findallroutes(csv_path);
         std::cout << "Total unique route pairs stored (both directions): " << routes.size() << "\n";
         // show a few sample routes with distances
-        size_t rshown = 0;
         for (const auto &kv : routes) {
             const auto &pair = kv.first;
             double dist = kv.second;
             std::cout << pair.first << " -> " << pair.second << " : " << std::fixed << std::setprecision(2) << dist << "\n";
-            if (++rshown >= 10) break;
         }
         return 0;
     } catch (const std::exception &ex) {
