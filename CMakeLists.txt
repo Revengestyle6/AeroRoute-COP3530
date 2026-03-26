@@ -8,6 +8,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_executable(aeroroute
     main.cpp
+    csv_loader.cpp
+    route_data.cpp
 )
 
 target_compile_features(aeroroute PRIVATE cxx_std_17)
