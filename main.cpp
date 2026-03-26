@@ -1,8 +1,11 @@
 #include <filesystem>
 #include <iomanip>
 #include <iostream>
+#include <vector>
 
 #include "route_data.h"
+#include "dijkstras.h"
+
 
 namespace fs = std::filesystem;
 
@@ -16,24 +19,25 @@ int main(int argc, char **argv) {
         }
 
         auto origins = findoriginnames(csv_path);
-        std::cout << "Found " << origins.size() << " origin airports (showing up to 20):\n";
-        size_t shown = 0;
-        for (const auto &p : origins) {
-            std::cout << p.first << " -> '" << p.second << "'\n";
-            if (++shown >= 20) break;
-        }
+        // for (const auto &p : origins) {
+        //     std::cout << p.first << " -> '" << p.second << "'\n";
+        // }
 
         auto routes = findallroutes(csv_path);
-        std::cout << "Total unique route pairs stored (both directions): " << routes.size() << "\n";
         // show a few sample routes with distances
-        for (const auto &kv : routes) {
-            const auto &pair = kv.first;
-            double dist = kv.second;
-            std::cout << pair.first << " -> " << pair.second << " : " << std::fixed << std::setprecision(2) << dist << "\n";
-        }
-        return 0;
+        // for (const auto &kv : routes) {
+        //     const auto &pair = kv.first;
+        //     double dist = kv.second;
+        //     std::cout << pair.first << " -> " << pair.second << " : " << std::fixed << std::setprecision(2) << dist << "\n";
+        // }
+        std::string source = argv[1];
+        std::string destination = argv[2];
+        std::cout << "Source: " << source << ", Destination: " << destination << std::endl;
+
+        auto flight_graph = adjacency_list(routes);
     } catch (const std::exception &ex) {
         std::cerr << "Error: " << ex.what() << std::endl;
         return 2;
     }
+    std::cout << "Processing completed successfully.\n";
 }
