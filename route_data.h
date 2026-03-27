@@ -16,10 +16,10 @@ findoriginnames(const std::filesystem::path &csvfile);
 std::vector<std::pair<std::string, std::string>>
 finddestinationnames(const std::filesystem::path &csvfile);
 
-std::map<std::pair<std::string, std::string>, double>
+std::map<std::pair<std::string, std::string>, int>
 findallroutes(const std::filesystem::path &csvfile);
 
-std::map<std::pair<std::string, std::string>, double>
+std::map<std::pair<std::string, std::string>, int>
 findoriginroutes(const std::filesystem::path &csvfile, const std::string &origin);
 
 #endif
