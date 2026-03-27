@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
         // std::cout << "Source: " << source << ", Destination: " << destination << std::endl;
 
         auto flight_graph = adjacency_list(routes);
-        auto output = dijkstras("JFK", "AZA", flight_graph);
+        auto output = dijkstras("SWF", "PIE", flight_graph);
         std::cout << output.first << std::endl;
         for (const auto& airport : output.second) {
             std::cout << airport << " ";

@@ -112,7 +112,7 @@ findallroutes(const std::filesystem::path &csvfile) {
                 std::string destination_upper = upper(destination);
                 output[{origin_upper, destination_upper}] = distance;
                 output[{destination_upper, origin_upper}] = distance;
-                std::cout << "running..." << std::endl;
+                std::cout << "finding all routes..." << std::endl;
             } catch (...) {
                 continue;
             }
