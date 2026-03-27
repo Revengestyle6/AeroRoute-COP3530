@@ -1,5 +1,7 @@
 #include "route_data.h"
 
+#include <iostream>
+
 #include "csv_loader.h"
 
 #include <set>
@@ -83,7 +85,7 @@ finddestinationnames(const std::filesystem::path &csvfile) {
     return std::vector<std::pair<std::string, std::string>>(output.begin(), output.end());
 }
 
-std::map<std::pair<std::string, std::string>, double>
+std::map<std::pair<std::string, std::string>, int>
 findallroutes(const std::filesystem::path &csvfile) {
     std::vector<std::string> header;
     std::vector<std::vector<std::string>> rows;
@@ -98,18 +100,19 @@ findallroutes(const std::filesystem::path &csvfile) {
         throw std::runtime_error("Required columns not found (airport_1 / airport_2 / nsmiles)");
     }
 
-    std::map<std::pair<std::string, std::string>, double> output;
+    std::map<std::pair<std::string, std::string>, int> output;
     for (const auto &row : rows) {
         std::string origin = (*idx_origin < row.size()) ? row[*idx_origin] : std::string();
         std::string destination = (*idx_destination < row.size()) ? row[*idx_destination] : std::string();
         std::string distance_string = (*idx_distance < row.size()) ? row[*idx_distance] : std::string();
         if (!origin.empty() && !destination.empty()) {
             try {
-                double distance = distance_string.empty() ? 0.0 : std::stod(distance_string);
+                int distance = distance_string.empty() ? 0.0 : std::stod(distance_string);
                 std::string origin_upper = upper(origin);
                 std::string destination_upper = upper(destination);
                 output[{origin_upper, destination_upper}] = distance;
                 output[{destination_upper, origin_upper}] = distance;
+                std::cout << "running..." << std::endl;
             } catch (...) {
                 continue;
             }
@@ -119,7 +122,7 @@ findallroutes(const std::filesystem::path &csvfile) {
     return output;
 }
 
-std::map<std::pair<std::string, std::string>, double>
+std::map<std::pair<std::string, std::string>, int>
 findoriginroutes(const std::filesystem::path &csvfile, const std::string &origin) {
     std::vector<std::string> header;
     std::vector<std::vector<std::string>> rows;
@@ -134,7 +137,7 @@ findoriginroutes(const std::filesystem::path &csvfile, const std::string &origin
         throw std::runtime_error("Required columns not found (airport_1 / airport_2 / nsmiles)");
     }
 
-    std::map<std::pair<std::string, std::string>, double> output;
+    std::map<std::pair<std::string, std::string>, int> output;
     std::string origin_upper = upper(origin);
 
     for (const auto &row : rows) {
