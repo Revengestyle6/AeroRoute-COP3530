@@ -4,8 +4,7 @@
 #include <map>
 #include <unordered_map>
 #include <vector>
-//maybe create a class for flight sim that holds all the routes
-//dont load it everytime.
+
 
 std::unordered_map<std::string, std::vector<std::pair<std::string, int>>> adjacency_list(const std::map<std::pair<std::string, std::string>, int>& routes);
 

@@ -74,6 +74,7 @@ finddestinationnames(const std::filesystem::path &csvfile) {
     }
 
     std::set<std::pair<std::string, std::string>> output;
+
     for (const auto &row : rows) {
         std::string airport = (*idx_city < row.size()) ? row[*idx_city] : std::string();
         std::string geocode = (*idx_geo < row.size()) ? row[*idx_geo] : std::string();
@@ -112,7 +113,7 @@ findallroutes(const std::filesystem::path &csvfile) {
                 std::string destination_upper = upper(destination);
                 output[{origin_upper, destination_upper}] = distance;
                 output[{destination_upper, origin_upper}] = distance;
-                std::cout << "running..." << std::endl;
+                std::cout << "finding all routes..." << std::endl;
             } catch (...) {
                 continue;
             }

@@ -15,6 +15,7 @@ std::unordered_map<std::string, std::vector<std::pair<std::string, int>>> adjace
     //         std::cout << dest.first << dest.second << std::endl;
     //     }
     // }
+
     return adj_list;
 }
 
@@ -36,9 +37,11 @@ std::pair<int, std::vector<std::string>> dijkstras(const std::string& source, co
             distance[origin.first] = INT_MAX;
             predecessor[origin.first] = "N/A";
         }
-        for (const auto& route : routes[source]) {
-            distance[route.first] = route.second;
-        }
+    }
+
+    for (const auto& route : routes[source]) {
+        distance[route.first] = route.second;
+        predecessor[route.first] = source;
     }
     while (!std::empty(unfinished)) {
         std::cout << "running dijkstras" << std::endl;
@@ -64,6 +67,7 @@ std::pair<int, std::vector<std::string>> dijkstras(const std::string& source, co
     int outputDistance = distance[destination];
     std::vector<std::string> path = {};
     std::string curr = destination;
+    path.push_back(destination);
     while (predecessor[curr] != "N/A") {
         std::cout << "running pathfinding" << std::endl;
         std::cout << predecessor[curr] << std::endl;
