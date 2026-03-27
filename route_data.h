@@ -7,8 +7,7 @@
 #include <utility>
 #include <vector>
 
-std::vector<std::string> findcol(const std::filesystem::path &csvfile,
-                                 const std::string &query);
+std::vector<std::string> findcol(const std::filesystem::path &csvfile, const std::string &query);
 
 std::vector<std::pair<std::string, std::string>>
 findoriginnames(const std::filesystem::path &csvfile);

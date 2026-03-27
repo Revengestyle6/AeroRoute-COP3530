@@ -74,6 +74,7 @@ finddestinationnames(const std::filesystem::path &csvfile) {
     }
 
     std::set<std::pair<std::string, std::string>> output;
+
     for (const auto &row : rows) {
         std::string airport = (*idx_city < row.size()) ? row[*idx_city] : std::string();
         std::string geocode = (*idx_geo < row.size()) ? row[*idx_geo] : std::string();
