@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <iostream>
 #include <vector>
+#include <string>
 
 #include "route_data.h"
 #include "dijkstras.h"
@@ -30,8 +31,26 @@ int main(int argc, char **argv) {
         //     double dist = kv.second;
         //     std::cout << pair.first << " -> " << pair.second << " : " << std::fixed << std::setprecision(2) << dist << "\n";
         // }
-        std::string source = argv[1];
-        std::string destination = argv[2];
+        std::string source;
+        std::string destination;
+
+        if (argc >= 3) {
+            source = argv[1];
+            destination = argv[2];
+        } else {
+            // Interactive prompt when arguments are missing
+            std::cout << "Enter source airport (e.g. ATL): ";
+            if (!std::getline(std::cin, source) || source.empty()) {
+                std::cerr << "No source provided. Exiting.\n";
+                return 1;
+            }
+            std::cout << "Enter destination airport (e.g. LAX): ";
+            if (!std::getline(std::cin, destination) || destination.empty()) {
+                std::cerr << "No destination provided. Exiting.\n";
+                return 1;
+            }
+        }
+
         std::cout << "Source: " << source << ", Destination: " << destination << std::endl;
 
         auto flight_graph = adjacency_list(routes);
