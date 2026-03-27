@@ -8,7 +8,7 @@ std::unordered_map<std::string, std::vector<std::pair<std::string, int>>> adjace
     for (auto& route : routes){
         adj_list[route.first.first].emplace_back(route.first.second, static_cast<int>(route.second));
     }
-    // TEST TO SHOW ADJACENCY LIST WORKING PROPERLY
+    // TEST TO SHOW ADJACENCY LIST WORKING PROPERLY.
     // for (auto& item : adj_list) {
     //     std::cout << item.first << std::endl;
     //     for (auto& dest : item.second) {

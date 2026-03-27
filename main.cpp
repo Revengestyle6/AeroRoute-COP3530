@@ -30,6 +30,8 @@ int main(int argc, char **argv) {
         //     double dist = kv.second;
         //     std::cout << pair.first << " -> " << pair.second << " : " << std::fixed << std::setprecision(2) << dist << "\n";
         // }
+
+        // Test input
         // std::string source = argv[1];
         // std::string destination = argv[2];
         // std::cout << "Source: " << source << ", Destination: " << destination << std::endl;
