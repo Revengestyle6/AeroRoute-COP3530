@@ -36,7 +36,7 @@ int heuristic(const std::string &x, const std::string &destination, const std::u
 
 
 std::pair<int, std::vector<std::string>> a_star(const std::string& source, const std::string& destination, std::unordered_map<std::string, std::vector<std::pair<std::string, int>>>& routes) {
-
+ 
     std::cout << "Starting a_star" << std::endl;
 
     // initializing coordinate search
@@ -80,7 +80,6 @@ std::pair<int, std::vector<std::string>> a_star(const std::string& source, const
     std::unordered_map<std::string, int> distance;
     std::unordered_map<std::string, std::string> predecessor;
 
-    //initialize all airports: source = 0 and every other airport distance = infinity
     for (const auto& origin : routes) {
         if (origin.first != source) {
             distance[origin.first] = INT_MAX;
@@ -96,8 +95,6 @@ std::pair<int, std::vector<std::string>> a_star(const std::string& source, const
     while (!pq.empty()) {
         int min = INT_MAX;
 
-        // pop smallest value from pq (min heap)
-        // [int(f), airport name]
         std::pair<int, std::string> current = pq.top();
         int currentF = current.first;
         std::string currentAirport = current.second;

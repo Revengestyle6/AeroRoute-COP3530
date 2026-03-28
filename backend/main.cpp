@@ -3,10 +3,9 @@
 #include <iostream>
 #include <vector>
 
-#include "a_star.h"
-#include "route_data.h"
-#include "dijkstras.h"
-
+#include "algorithms/a_star.h"
+#include "data/route_data.h"
+#include "algorithms/dijkstras.h"
 
 namespace fs = std::filesystem;
 
