@@ -1,7 +1,7 @@
 #include "dijkstras.h"
 #include "a_star.h"
 #include <algorithm>
-#include <iostream>
+#include <climits>
 #include <utility>
 #include <cmath>
 #include "csv_loader.h"
@@ -37,8 +37,6 @@ int heuristic(const std::string &x, const std::string &destination, const std::u
 
 std::pair<int, std::vector<std::string>> a_star(const std::string& source, const std::string& destination, std::unordered_map<std::string, std::vector<std::pair<std::string, int>>>& routes) {
  
-    std::cout << "Starting a_star" << std::endl;
-
     // initializing coordinate search
     std::filesystem::path base = std::filesystem::current_path();
     std::filesystem::path csv_path = base / "accurate_airport_locations.csv";
@@ -47,7 +45,6 @@ std::pair<int, std::vector<std::string>> a_star(const std::string& source, const
     std::vector<std::vector<std::string>> rows;
 
     if (!read_csv(csv_path, header, rows)) {
-        std::cout << "Unable to read CSV: " << csv_path.string() << std::endl;
         throw std::runtime_error("Unable to read CSV: " + csv_path.string());
     }
 
@@ -93,8 +90,6 @@ std::pair<int, std::vector<std::string>> a_star(const std::string& source, const
     predecessor[source] = "N/A";
 
     while (!pq.empty()) {
-        int min = INT_MAX;
-
         std::pair<int, std::string> current = pq.top();
         int currentF = current.first;
         std::string currentAirport = current.second;
@@ -130,8 +125,6 @@ std::pair<int, std::vector<std::string>> a_star(const std::string& source, const
     path.push_back(destination);
 
     while (predecessor[curr] != "N/A") {
-        std::cout << "running pathfinding" << std::endl;
-        std::cout << predecessor[curr] << std::endl;
         path.insert(path.begin(), predecessor[curr]);
         curr = predecessor[curr];
     }
