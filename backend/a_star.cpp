@@ -5,16 +5,21 @@
 #include <utility>
 #include <cmath>
 #include "csv_loader.h"
+#include <queue>
 
+// used for solving g var (estimated distance from currNode -> destination) in A*
 int heuristic(const std::string &x, const std::string &destination, const std::unordered_map<std::string, std::pair<double,double>>& coords) {
     if (coords.find(x) == coords.end() || coords.find(destination) == coords.end()) return 0;
 
+    // source
     double latOrigin = coords.at(x).first;
     double lonOrigin = coords.at(x).second;
-    double latDestination = coords.at(x).first;
-    double lonDestination = coords.at(x).second;
 
-    //Haversine formula to find distance between two points
+    // target
+    double latDestination = coords.at(destination).first;
+    double lonDestination = coords.at(destination).second;
+
+    //Haversine formula to find distance between two points (used for calculating with curvature of Earth)
     double dlat = (latDestination - latOrigin) * 3.1415192 / 180.0;
     double dlon = (lonDestination - lonOrigin) * 3.1415192 / 180.0;
 
@@ -26,11 +31,14 @@ int heuristic(const std::string &x, const std::string &destination, const std::u
                sin(dlon/2)*sin(dlon/2);
 
     double c = 2 * asin(sqrt(h));
-    return (int)(6371 * c);
+    return (int)(3959 * c);
 }
 
 
 std::pair<int, std::vector<std::string>> a_star(const std::string& source, const std::string& destination, std::unordered_map<std::string, std::vector<std::pair<std::string, int>>>& routes) {
+
+    std::cout << "Starting a_star" << std::endl;
+
     // initializing coordinate search
     std::filesystem::path base = std::filesystem::current_path();
     std::filesystem::path csv_path = base / "accurate_airport_locations.csv";
@@ -64,61 +72,66 @@ std::pair<int, std::vector<std::string>> a_star(const std::string& source, const
         }
     }
 
+    // initialize priority queue (min heap behavior)
+    std::priority_queue<std::pair<int, std::string>, std::vector<std::pair<int, std::string>>, std::greater<>> pq;
 
-    std::vector<std::string> finished;
-    std::vector<std::string> unfinished;
+    // std::vector<std::string> finished;
+    // std::vector<std::string> unfinished;
     std::unordered_map<std::string, int> distance;
     std::unordered_map<std::string, std::string> predecessor;
 
-    //initialize finished list
-    finished.emplace_back(source);
-    distance[source] = 0;
-    predecessor[source] = "N/A";
-    //initialize unfinished list
+    //initialize all airports: source = 0 and every other airport distance = infinity
     for (const auto& origin : routes) {
-        std::cout << "initializing a_star" << std::endl;
         if (origin.first != source) {
-            unfinished.emplace_back(origin.first);
             distance[origin.first] = INT_MAX;
             predecessor[origin.first] = "N/A";
         }
     }
 
-    for (const auto& route : routes[source]) {
-        distance[route.first] = route.second;
-        predecessor[route.first] = source;
-    }
+    // add source to priority queue w/ distance 0
+    pq.emplace(0, source);
+    distance[source] = 0;
+    predecessor[source] = "N/A";
 
-    while (!std::empty(unfinished)) {
-        std::cout << "running a_star" << std::endl;
-        std::string smallest;
+    while (!pq.empty()) {
         int min = INT_MAX;
 
-        for (const auto& x : unfinished) {
-            int f = distance[x] + heuristic(x, destination, coords);
-            if (f < min) {
-                min = f;
-                smallest = x;
-            }
-        }
-        std::cout << smallest << std::endl;
-        finished.emplace_back(smallest);
-        unfinished.erase(std::remove(unfinished.begin(), unfinished.end(), smallest), unfinished.end());
+        // pop smallest value from pq (min heap)
+        // [int(f), airport name]
+        std::pair<int, std::string> current = pq.top();
+        int currentF = current.first;
+        std::string currentAirport = current.second;
+        pq.pop();
 
-        for (const auto& route : routes[smallest]) {
-            if (distance[smallest] + route.second <= distance[route.first]) {
-                distance[route.first] = distance[smallest] + route.second;
-                predecessor[route.first] = smallest;
-            }
+        if (currentF > distance[currentAirport] + heuristic(currentAirport, destination, coords)) {
+            continue;
         }
-        if (smallest == destination) {
+
+        if (currentAirport == destination) {
             break;
         }
+
+        // relaxation: loop through every neighbor of current
+        // routes = [string, int]
+        for (const auto& route : routes[currentAirport]) {
+            // if distance of current + distance to neighbor less than distance in array -> replace distance 
+            if (distance[currentAirport] + route.second < distance[route.first]){
+                distance[route.first] = distance[currentAirport] + route.second;
+                predecessor[route.first] = currentAirport;
+
+                // compute heuristic and add to pq
+                int f = distance[route.first] + heuristic(route.first, destination, coords);
+                pq.emplace(f, route.first);
+
+            }
+        }
     }
+
     int outputDistance = distance[destination];
     std::vector<std::string> path = {};
     std::string curr = destination;
     path.push_back(destination);
+
     while (predecessor[curr] != "N/A") {
         std::cout << "running pathfinding" << std::endl;
         std::cout << predecessor[curr] << std::endl;
