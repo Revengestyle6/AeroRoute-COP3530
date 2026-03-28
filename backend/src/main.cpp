@@ -83,21 +83,28 @@ int main(int argc, char **argv) {
 
     try {
         fs::path base = fs::current_path();
-        fs::path csv_path = base / "flight_data.csv";
-        if (!fs::exists(csv_path)) {
-            std::cerr << "CSV file not found at: " << csv_path << "\n";
+        fs::path routes_path = base / "flight_data.csv";
+        fs::path coordinates_path = base / "accurate_airport_locations.csv";
+        if (!fs::exists(routes_path)) {
+            std::cerr << "CSV file not found at: " << routes_path << "\n";
             return 1;
         }
 
-        auto routes = findallroutes(csv_path);
+        if (!fs::exists(coordinates_path)) {
+            std::cerr << "CSV file not found at: " << coordinates_path << "\n";
+            return 1;
+        }
+
+        auto routes = findallroutes(routes_path);
         auto flight_graph = adjacency_list(routes);
+        const auto airport_coordinates = load_airport_coordinates(coordinates_path);
 
         const auto dijkstra_start = std::chrono::steady_clock::now();
         const auto dijkstra_result = dijkstras(source, destination, flight_graph);
         const auto dijkstra_end = std::chrono::steady_clock::now();
 
         const auto astar_start = std::chrono::steady_clock::now();
-        const auto astar_result = a_star(source, destination, flight_graph);
+        const auto astar_result = a_star(source, destination, flight_graph, airport_coordinates);
         const auto astar_end = std::chrono::steady_clock::now();
 
         const double dijkstra_time_ms =

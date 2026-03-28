@@ -144,7 +144,7 @@ export default function App() {
       try {
         const response = await fetch('/api/airports');
         if (!response.ok) {
-          throw new Error('Failed to load airports. Build and run aeroroute_api first.');
+          throw new Error('Failed to load airports. Start the API server and build the backend first.');
         }
 
         const payload = await response.json();
