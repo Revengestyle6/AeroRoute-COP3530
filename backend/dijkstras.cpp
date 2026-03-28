@@ -74,6 +74,6 @@ std::pair<int, std::vector<std::string>> dijkstras(const std::string& source, co
         path.insert(path.begin(), predecessor[curr]);
         curr = predecessor[curr];
     }
-
+    
     return std::make_pair(outputDistance, path);
 }
