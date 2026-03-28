@@ -114,7 +114,6 @@ std::pair<int, std::vector<std::string>> a_star(const std::string& source, const
                 // compute heuristic and add to pq
                 int f = distance[route.first] + heuristic(route.first, destination, coords);
                 pq.emplace(f, route.first);
-
             }
         }
     }

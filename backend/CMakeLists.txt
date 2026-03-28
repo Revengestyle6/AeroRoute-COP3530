@@ -26,7 +26,20 @@ add_executable(aeroroute
     ${AEROROUTE_HEADERS}
 )
 
+add_executable(aeroroute_api
+    api_cli.cpp
+    csv_loader.cpp
+    route_data.cpp
+    dijkstras.cpp
+    a_star.cpp
+    csv_loader.h
+    route_data.h
+    dijkstras.h
+    a_star.h
+)
+
 target_compile_features(aeroroute PRIVATE cxx_std_17)
+target_compile_features(aeroroute_api PRIVATE cxx_std_17)
 
 set(AEROROUTE_DATA_FILES
     src/data/flight_data.csv
@@ -48,6 +61,14 @@ foreach(data_file IN LISTS AEROROUTE_DATA_FILES)
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
                     "${CMAKE_SOURCE_DIR}/${data_file}"
                     "$<TARGET_FILE_DIR:aeroroute>/${data_filename}"
+            VERBATIM
+        )
+
+        add_custom_command(
+            TARGET aeroroute_api POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                    "${CMAKE_SOURCE_DIR}/${data_file}"
+                    "$<TARGET_FILE_DIR:aeroroute_api>/${data_file}"
             VERBATIM
         )
     else()
