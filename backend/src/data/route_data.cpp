@@ -1,7 +1,5 @@
 #include "route_data.h"
 
-#include <iostream>
-
 #include "csv_loader.h"
 
 #include <set>
@@ -113,7 +111,6 @@ findallroutes(const std::filesystem::path &csvfile) {
                 std::string destination_upper = upper(destination);
                 output[{origin_upper, destination_upper}] = distance;
                 output[{destination_upper, origin_upper}] = distance;
-                std::cout << "finding all routes..." << std::endl;
             } catch (...) {
                 continue;
             }

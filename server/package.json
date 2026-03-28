@@ -1,0 +1,28 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Express API server for AeroRoute",
+  "private": true,
+  "main": "build/index.js",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "type-check": "tsc --noEmit",
+    "build": "tsc",
+    "start": "node build/index.js",
+    "test": "echo \"No tests configured\""
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.5.0",
+    "tsx": "^4.20.6",
+    "typescript": "^6.0.2"
+  }
+}

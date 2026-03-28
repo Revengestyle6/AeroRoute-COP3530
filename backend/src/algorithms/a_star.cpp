@@ -1,14 +1,14 @@
 #include "dijkstras.h"
 #include "a_star.h"
 #include <algorithm>
-#include <iostream>
+#include <climits>
 #include <utility>
 #include <cmath>
 #include "csv_loader.h"
 #include <queue>
 
 // used for solving g var (estimated distance from currNode -> destination) in A*
-int heuristic(const std::string &x, const std::string &destination, const std::unordered_map<std::string, std::pair<double,double>>& coords) {
+int heuristic(const std::string &x, const std::string &destination, const AirportCoordinates& coords) {
     if (coords.find(x) == coords.end() || coords.find(destination) == coords.end()) return 0;
 
     // source
@@ -34,20 +34,12 @@ int heuristic(const std::string &x, const std::string &destination, const std::u
     return (int)(3959 * c);
 }
 
-
-std::pair<int, std::vector<std::string>> a_star(const std::string& source, const std::string& destination, std::unordered_map<std::string, std::vector<std::pair<std::string, int>>>& routes) {
-
-    std::cout << "Starting a_star" << std::endl;
-
-    // initializing coordinate search
-    std::filesystem::path base = std::filesystem::current_path();
-    std::filesystem::path csv_path = base / "accurate_airport_locations.csv";
-
+// loads coordinates outside A* so that it does not skew runtime
+AirportCoordinates load_airport_coordinates(const std::filesystem::path& csv_path) {
     std::vector<std::string> header;
     std::vector<std::vector<std::string>> rows;
 
     if (!read_csv(csv_path, header, rows)) {
-        std::cout << "Unable to read CSV: " << csv_path.string() << std::endl;
         throw std::runtime_error("Unable to read CSV: " + csv_path.string());
     }
 
@@ -59,19 +51,27 @@ std::pair<int, std::vector<std::string>> a_star(const std::string& source, const
         throw std::runtime_error("Missing columns");
     }
 
-    // Build coordinate map ONCE
-    std::unordered_map<std::string, std::pair<double,double>> coords;
+    AirportCoordinates coords;
 
     for (const auto &row : rows) {
-        std::string airport = (*idx_city < row.size()) ? row[*idx_city] : "";
-        std::string lat = (*idx_lat < row.size()) ? row[*idx_lat] : "";
-        std::string lon = (*idx_long < row.size()) ? row[*idx_long] : "";
+        std::string airport = (*idx_city < row.size()) ? upper(trim(row[*idx_city])) : "";
+        std::string lat = (*idx_lat < row.size()) ? trim(row[*idx_lat]) : "";
+        std::string lon = (*idx_long < row.size()) ? trim(row[*idx_long]) : "";
 
         if (!airport.empty() && !lat.empty() && !lon.empty()) {
             coords[airport] = {std::stod(lat), std::stod(lon)};
         }
     }
 
+    return coords;
+}
+
+std::pair<int, std::vector<std::string>> a_star(
+    const std::string& source,
+    const std::string& destination,
+    std::unordered_map<std::string, std::vector<std::pair<std::string, int>>>& routes,
+    const AirportCoordinates& coords
+) {
     // initialize priority queue (min heap behavior)
     std::priority_queue<std::pair<int, std::string>, std::vector<std::pair<int, std::string>>, std::greater<>> pq;
 
@@ -80,7 +80,6 @@ std::pair<int, std::vector<std::string>> a_star(const std::string& source, const
     std::unordered_map<std::string, int> distance;
     std::unordered_map<std::string, std::string> predecessor;
 
-    //initialize all airports: source = 0 and every other airport distance = infinity
     for (const auto& origin : routes) {
         if (origin.first != source) {
             distance[origin.first] = INT_MAX;
@@ -94,10 +93,6 @@ std::pair<int, std::vector<std::string>> a_star(const std::string& source, const
     predecessor[source] = "N/A";
 
     while (!pq.empty()) {
-        int min = INT_MAX;
-
-        // pop smallest value from pq (min heap)
-        // [int(f), airport name]
         std::pair<int, std::string> current = pq.top();
         int currentF = current.first;
         std::string currentAirport = current.second;
@@ -122,7 +117,6 @@ std::pair<int, std::vector<std::string>> a_star(const std::string& source, const
                 // compute heuristic and add to pq
                 int f = distance[route.first] + heuristic(route.first, destination, coords);
                 pq.emplace(f, route.first);
-
             }
         }
     }
@@ -133,8 +127,6 @@ std::pair<int, std::vector<std::string>> a_star(const std::string& source, const
     path.push_back(destination);
 
     while (predecessor[curr] != "N/A") {
-        std::cout << "running pathfinding" << std::endl;
-        std::cout << predecessor[curr] << std::endl;
         path.insert(path.begin(), predecessor[curr]);
         curr = predecessor[curr];
     }

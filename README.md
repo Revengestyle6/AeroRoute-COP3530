@@ -1,6 +1,24 @@
 <H1> COP3530 - Project 2 </h1>
 This is the template for Project 2 repositories. It includes all the assignment instructions and documentation to help you use GitHub.
 
+## AeroRoute Frontend + API Quick Start
+
+The React frontend lives in [frontend](frontend) and calls your C++ algorithm functions through a small API bridge.
+
+1. Build the backend API executable (from the `backend` directory):
+	- `cmake -S . -B cmake-build-debug`
+	- `cmake --build cmake-build-debug --target aeroroute_api`
+2. Start the frontend (from the `frontend` directory):
+	- `npm install`
+	- `npm run dev`
+3. Open `http://localhost:5173`
+
+The bridge server runs on `http://localhost:3001` and invokes `aeroroute_api`, which uses:
+- `findallroutes(...)`
+- `adjacency_list(...)`
+- `dijkstras(...)`
+- `a_star(...)`
+
 <h2> Table of Contents </h2>
 
 - [Documentation and resources on how to use GitHub for Project 2](#documentation-and-resources-on-how-to-use-github-for-project-3)

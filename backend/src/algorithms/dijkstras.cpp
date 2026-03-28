@@ -1,6 +1,6 @@
 #include "dijkstras.h"
 #include <algorithm>
-#include <iostream>
+#include <climits>
 #include <utility>
 #include <queue>
 
@@ -9,13 +9,6 @@ std::unordered_map<std::string, std::vector<std::pair<std::string, int>>> adjace
     for (auto& route : routes){
         adj_list[route.first.first].emplace_back(route.first.second, static_cast<int>(route.second));
     }
-    // TEST TO SHOW ADJACENCY LIST WORKING PROPERLY.
-    // for (auto& item : adj_list) {
-    //     std::cout << item.first << std::endl;
-    //     for (auto& dest : item.second) {
-    //         std::cout << dest.first << dest.second << std::endl;
-    //     }
-    // }
 
     return adj_list;
 }
@@ -31,7 +24,6 @@ std::pair<int, std::vector<std::string>> dijkstras(const std::string& source, co
     unfinished.push(make_pair(distance[source], source));
     //initialize unfinished list
     for (const auto& origin : routes) {
-        std::cout << "initializing dijkstras" << std::endl;
         if (origin.first != source) {
             distance[origin.first] = INT_MAX;
             predecessor[origin.first] = "N/A";
@@ -41,7 +33,6 @@ std::pair<int, std::vector<std::string>> dijkstras(const std::string& source, co
     std::string smallest;
     int min;
     while (!unfinished.empty()) {
-        std::cout << "running dijkstras" << std::endl;
         min = INT_MAX;
         // for (const auto& x : unfinished) {
         //     if (distance[x] < min) {
@@ -68,8 +59,6 @@ std::pair<int, std::vector<std::string>> dijkstras(const std::string& source, co
     std::string curr = destination;
     path.push_back(destination);
     while (predecessor[curr] != "N/A") {
-        std::cout << "running pathfinding" << std::endl;
-        std::cout << predecessor[curr] << std::endl;
         path.insert(path.begin(), predecessor[curr]);
         curr = predecessor[curr];
     }
