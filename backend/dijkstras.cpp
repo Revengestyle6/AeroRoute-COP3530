@@ -42,6 +42,7 @@ std::pair<int, std::vector<std::string>> dijkstras(const std::string& source, co
     int min;
     while (!unfinished.empty()) {
         std::cout << "running dijkstras" << std::endl;
+        std::cout << smallest << std::endl;
         min = INT_MAX;
         // for (const auto& x : unfinished) {
         //     if (distance[x] < min) {

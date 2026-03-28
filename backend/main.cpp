@@ -39,13 +39,13 @@ int main(int argc, char **argv) {
 
         auto flight_graph = adjacency_list(routes);
         
-        auto output = dijkstras("LGA", "TPA", flight_graph);
+        auto output = dijkstras("TPA", "LAX", flight_graph);
         std::cout << output.first << std::endl;
         for (const auto& airport : output.second) {
             std::cout << airport << " ";
         }
 
-        auto output_a_star = a_star("LGA", "TPA", flight_graph);
+        auto output_a_star = a_star("TPA", "LAX", flight_graph);
         std::cout << output_a_star.first << std::endl;
         for (const auto& airport : output_a_star.second) {
             std::cout << airport << " ";

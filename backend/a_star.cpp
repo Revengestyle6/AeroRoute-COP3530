@@ -94,6 +94,7 @@ std::pair<int, std::vector<std::string>> a_star(const std::string& source, const
     predecessor[source] = "N/A";
 
     while (!pq.empty()) {
+
         int min = INT_MAX;
 
         // pop smallest value from pq (min heap)
@@ -102,6 +103,9 @@ std::pair<int, std::vector<std::string>> a_star(const std::string& source, const
         int currentF = current.first;
         std::string currentAirport = current.second;
         pq.pop();
+
+        std::cout << "Running a_star" << std::endl;
+        std::cout << currentAirport << std::endl;
 
         if (currentF > distance[currentAirport] + heuristic(currentAirport, destination, coords)) {
             continue;
@@ -122,7 +126,6 @@ std::pair<int, std::vector<std::string>> a_star(const std::string& source, const
                 // compute heuristic and add to pq
                 int f = distance[route.first] + heuristic(route.first, destination, coords);
                 pq.emplace(f, route.first);
-
             }
         }
     }
