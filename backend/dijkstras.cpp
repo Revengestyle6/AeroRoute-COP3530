@@ -31,7 +31,6 @@ std::pair<int, std::vector<std::string>> dijkstras(const std::string& source, co
     unfinished.push(make_pair(distance[source], source));
     //initialize unfinished list
     for (const auto& origin : routes) {
-        std::cout << "initializing dijkstras" << std::endl;
         if (origin.first != source) {
             distance[origin.first] = INT_MAX;
             predecessor[origin.first] = "N/A";
@@ -41,8 +40,6 @@ std::pair<int, std::vector<std::string>> dijkstras(const std::string& source, co
     std::string smallest;
     int min;
     while (!unfinished.empty()) {
-        std::cout << "running dijkstras" << std::endl;
-        std::cout << smallest << std::endl;
         min = INT_MAX;
         // for (const auto& x : unfinished) {
         //     if (distance[x] < min) {
@@ -69,8 +66,6 @@ std::pair<int, std::vector<std::string>> dijkstras(const std::string& source, co
     std::string curr = destination;
     path.push_back(destination);
     while (predecessor[curr] != "N/A") {
-        std::cout << "running pathfinding" << std::endl;
-        std::cout << predecessor[curr] << std::endl;
         path.insert(path.begin(), predecessor[curr]);
         curr = predecessor[curr];
     }

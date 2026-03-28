@@ -36,9 +36,6 @@ int heuristic(const std::string &x, const std::string &destination, const std::u
 
 
 std::pair<int, std::vector<std::string>> a_star(const std::string& source, const std::string& destination, std::unordered_map<std::string, std::vector<std::pair<std::string, int>>>& routes) {
-
-    std::cout << "Starting a_star" << std::endl;
-
     // initializing coordinate search
     std::filesystem::path base = std::filesystem::current_path();
     std::filesystem::path csv_path = base / "accurate_airport_locations.csv";
@@ -104,9 +101,6 @@ std::pair<int, std::vector<std::string>> a_star(const std::string& source, const
         std::string currentAirport = current.second;
         pq.pop();
 
-        std::cout << "Running a_star" << std::endl;
-        std::cout << currentAirport << std::endl;
-
         if (currentF > distance[currentAirport] + heuristic(currentAirport, destination, coords)) {
             continue;
         }
@@ -136,8 +130,6 @@ std::pair<int, std::vector<std::string>> a_star(const std::string& source, const
     path.push_back(destination);
 
     while (predecessor[curr] != "N/A") {
-        std::cout << "running pathfinding" << std::endl;
-        std::cout << predecessor[curr] << std::endl;
         path.insert(path.begin(), predecessor[curr]);
         curr = predecessor[curr];
     }
