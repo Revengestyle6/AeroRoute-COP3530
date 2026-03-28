@@ -1,9 +1,14 @@
 import express from "express";
+import { execFile } from "node:child_process";
+import path from "node:path";
+import { promisify } from "node:util";
 
+// creates express app
 const app = express();
 const port = Number(process.env.PORT) || 3000;
 const clientOrigin = process.env.CLIENT_ORIGIN || "http://localhost:5173";
 
+// define types for request and response
 type PathfindingRequestBody = {
   source?: string;
   destination?: string;
@@ -38,9 +43,11 @@ app.use((req, res, next) => {
   next();
 });
 
+const execFileAsync = promisify(execFile);
+
 const normalizeAirportCode = (value: string) => value.trim().toUpperCase();
 
-app.post("/pathfinding", (req, res) => {
+app.post("/pathfinding", async (req, res) => {
   const { source, destination } = req.body as PathfindingRequestBody;
 
   if (!source || !destination) {
@@ -52,28 +59,27 @@ app.post("/pathfinding", (req, res) => {
   const normalizedSource = normalizeAirportCode(source);
   const normalizedDestination = normalizeAirportCode(destination);
 
-  // TODO: Replace these placeholder results with real calls into your C++ backend.
-  const response: PathfindingResponse = {
-    source: normalizedSource,
-    destination: normalizedDestination,
-    results: {
-      dijkstra: {
-        path: [],
-        distance: 0,
-        timeMs: 0,
-      },
-      astar: {
-        path: [],
-        distance: 0,
-        timeMs: 0,
-      },
-    },
-  };
+  try {
+    const binaryPath = path.resolve(__dirname, "../../backend/build/aeroroute");
 
-  return res.status(501).json({
-    message: "Pathfinding is not wired to the C++ backend yet.",
-    ...response,
-  });
+    const { stdout } = await execFileAsync(binaryPath, [
+      normalizedSource,
+      normalizedDestination,
+    ]);
+
+    const results = JSON.parse(stdout);
+
+    return res.json({
+      source: normalizedSource,
+      destination: normalizedDestination,
+      results,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: "Failed to call C++ backend.",
+      details: error instanceof Error ? error.message : String(error),
+    });
+  }
 });
 
 app.listen(port, () => {
