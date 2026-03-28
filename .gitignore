@@ -1,1 +1,23 @@
+# macOS
+.DS_Store
+
+# CMake / C++
 build/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+aeroroute
+*.dSYM/
+
+# Editors
+.idea/
+.vscode/
+
+# Node
+node_modules/
+dist/
+
+# Env files
+.env
+.env.*
+!.env.example
