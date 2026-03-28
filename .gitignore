@@ -14,13 +14,6 @@ node_modules/
 dist/
 dist-ssr/
 *.local
-# Editors
-.idea/
-.vscode/
-
-# Node
-node_modules/
-dist/
 
 # Env files
 .env
