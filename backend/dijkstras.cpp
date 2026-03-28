@@ -3,7 +3,6 @@
 #include <iostream>
 #include <utility>
 #include <queue>
-#include <functional>
 
 std::unordered_map<std::string, std::vector<std::pair<std::string, int>>> adjacency_list(const std::map<std::pair<std::string, std::string>, int>& routes){
     std::unordered_map<std::string, std::vector<std::pair<std::string, int>>> adj_list;
