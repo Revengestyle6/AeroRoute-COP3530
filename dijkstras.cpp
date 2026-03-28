@@ -2,6 +2,8 @@
 #include <algorithm>
 #include <iostream>
 #include <utility>
+#include <queue>
+#include <functional>
 
 std::unordered_map<std::string, std::vector<std::pair<std::string, int>>> adjacency_list(const std::map<std::pair<std::string, std::string>, int>& routes){
     std::unordered_map<std::string, std::vector<std::pair<std::string, int>>> adj_list;
@@ -20,46 +22,44 @@ std::unordered_map<std::string, std::vector<std::pair<std::string, int>>> adjace
 }
 
 std::pair<int, std::vector<std::string>> dijkstras(const std::string& source, const std::string& destination, std::unordered_map<std::string, std::vector<std::pair<std::string, int>>>& routes) {
-    std::vector<std::string> finished;
-    std::vector<std::string> unfinished;
+    std::priority_queue<std::pair<int, std::string>, std::vector<std::pair<int, std::string>>, std::greater<std::pair<int,std::string>>> unfinished;
     std::unordered_map<std::string, int> distance;
     std::unordered_map<std::string, std::string> predecessor;
 
     //initialize finished list
-    finished.emplace_back(source);
     distance[source] = 0;
     predecessor[source] = "N/A";
+    unfinished.push(make_pair(distance[source], source));
     //initialize unfinished list
     for (const auto& origin : routes) {
         std::cout << "initializing dijkstras" << std::endl;
         if (origin.first != source) {
-            unfinished.emplace_back(origin.first);
             distance[origin.first] = INT_MAX;
             predecessor[origin.first] = "N/A";
         }
     }
 
-    for (const auto& route : routes[source]) {
-        distance[route.first] = route.second;
-        predecessor[route.first] = source;
-    }
-    while (!std::empty(unfinished)) {
+    std::string smallest;
+    int min;
+    while (!unfinished.empty()) {
         std::cout << "running dijkstras" << std::endl;
-        std::string smallest;
-        int min = INT_MAX;
-        for (const auto& x : unfinished) {
-            if (distance[x] < min) {
-                min = distance[x];
-                smallest = x;
-            }
-        }
-        std::cout << smallest << std::endl;
-        finished.emplace_back(smallest);
-        unfinished.erase(std::remove(unfinished.begin(), unfinished.end(), smallest), unfinished.end());
+        min = INT_MAX;
+        // for (const auto& x : unfinished) {
+        //     if (distance[x] < min) {
+        //         min = distance[x];
+        //         smallest = x;
+        //     }
+        // }
+        smallest = unfinished.top().second;
+        min = unfinished.top().first;
+        unfinished.pop();
+        if (min > distance[smallest]) 
+            continue;
 
         for (const auto& route : routes[smallest]) {
-            if (distance[smallest] + route.second <= distance[route.first]) {
+            if (distance[smallest] + route.second < distance[route.first]) {
                 distance[route.first] = distance[smallest] + route.second;
+                unfinished.push(make_pair(distance[route.first], route.first));
                 predecessor[route.first] = smallest;
             }
         }
