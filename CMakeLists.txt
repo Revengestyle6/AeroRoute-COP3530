@@ -11,6 +11,8 @@ add_executable(aeroroute
     csv_loader.cpp
     route_data.cpp
     dijkstras.cpp
+        a_star.cpp
+        a_star.h
 )
 
 target_compile_features(aeroroute PRIVATE cxx_std_17)

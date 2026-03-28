@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 
+#include "a_star.h"
 #include "route_data.h"
 #include "dijkstras.h"
 
@@ -40,6 +41,12 @@ int main(int argc, char **argv) {
         auto output = dijkstras("MIA", "LAX", flight_graph);
         std::cout << output.first << std::endl;
         for (const auto& airport : output.second) {
+            std::cout << airport << " ";
+        }
+
+        auto output_a_star = a_star("MIA", "LAX", flight_graph);
+        std::cout << output_a_star.first << std::endl;
+        for (const auto& airport : output_a_star.second) {
             std::cout << airport << " ";
         }
     } catch (const std::exception &ex) {
