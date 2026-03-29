@@ -3,17 +3,20 @@ This is the template for Project 2 repositories. It includes all the assignment 
 
 ## AeroRoute Frontend + API Quick Start
 
-The React frontend lives in [frontend](frontend) and calls your C++ algorithm functions through a small API bridge.
+The React frontend lives in [frontend](frontend) and calls your C++ algorithm functions through the Express API server in [server](server).
 
-1. Build the backend API executable (from the `backend` directory):
-	- `cmake -S . -B cmake-build-debug`
-	- `cmake --build cmake-build-debug --target aeroroute_api`
-2. Start the frontend (from the `frontend` directory):
+1. Build the backend executable (from the `backend` directory):
+	- `cmake -S . -B build`
+	- `cmake --build build --target aeroroute`
+2. Start the API server (from the `server` directory):
 	- `npm install`
 	- `npm run dev`
-3. Open `http://localhost:5173`
+3. Start the frontend (from the `frontend` directory):
+	- `npm install`
+	- `npm run dev`
+4. Open `http://localhost:5173`
 
-The bridge server runs on `http://localhost:3001` and invokes `aeroroute_api`, which uses:
+The API server runs on `http://localhost:3000` and invokes `backend/build/aeroroute`, which uses:
 - `findallroutes(...)`
 - `adjacency_list(...)`
 - `dijkstras(...)`
